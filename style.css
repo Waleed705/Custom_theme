@@ -1,0 +1,490 @@
+/* ================================
+   Theme Name: Waleed
+   Author: Mian waleed
+   Date: October 7, 2024
+   Version: 1.0
+   ================================ */
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    height: 100vh;
+}
+header{
+    background-color: #333;
+    display: flex;
+    gap: 490px;
+    height: 126px;
+    margin-bottom: 10px;
+}
+.page-links{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 80px;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+}
+.logo{
+    display: flex;
+    margin-top: 10px;
+    margin-left: 50px;
+    width: 110px;
+    height: 110px;
+}
+.logo img{
+    width: 100%;
+    height: 100%;
+}
+.main-container{
+    display: grid;
+    grid-template-columns: 2fr 7fr 3fr;
+    padding-left: 20px;
+    gap: 20px;
+}
+.searchbar form{
+    margin-right: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: end;
+}
+.news{
+    margin-left: 30px;
+    height: fit-content;
+}
+.left-side{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.sidebar {
+
+    width: 250px;
+    border: 2px solid;
+
+}
+
+.sidebar h1 {
+    font-size: 24px;
+    text-align: center;
+}
+
+
+
+.sidebar-links ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar-links li {
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+.sidebar-links li:hover {
+    color: #ff6347;
+    cursor: pointer; 
+    font-weight: bold; 
+}
+
+.post img {
+    width: 830px;
+    height: 458px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+ .course{
+    background-color: #f5f5dc; 
+    width: 250px; 
+    display: flex;
+    flex-direction: column;
+    border: 2px solid;
+    padding: 20px; 
+    border-right: 2px solid #333;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); 
+ }
+ .course ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.course li {
+    margin: 10px 0;
+    padding: 5px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.course li:last-child {
+    border-bottom: none;
+}
+
+.course li a {
+    text-decoration: none;
+    color: #333; 
+    font-weight: normal;
+    display: block;
+    padding: 10px 15px;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.course li a h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.course li a:hover {
+    background-color: #f0f0f0;
+    color: #0073aa;
+}
+
+ .news{
+    background-color: #f5f5dc;
+    margin-right: 10px;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid;
+    padding: 20px;
+    border-right: 2px solid #333;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+ }
+ .news ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.news li {
+    margin: 10px 0;
+    padding: 5px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.news li:last-child {
+    border-bottom: none;
+}
+
+.news li a {
+    text-decoration: none;
+    color: #333; 
+    font-weight: normal;
+    display: block;
+    padding: 10px 15px;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.news li a h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.news li a:hover {
+    background-color: #f0f0f0;
+    color: #0073aa;
+}
+.nav{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+ }
+ .nav>li{
+    list-style: none;
+    margin: 0px 30px;
+    text-decoration: none;
+    position: relative;
+ }
+ .nav a{
+    text-decoration: none;
+    color: white;
+ }
+.wp-block-gallery{
+    display: flex;
+    gap: 10px;
+}
+.wp-block-image{
+    width: 250px;
+    height: 250px;
+    border: 2px solid red ;
+}
+.wp-block-image img{
+    width: 100%;
+    height: 100%;
+}
+.page-thumbnail-image{
+    
+    width: 300px;
+    height: 250px;
+}
+.attachment-post-thumbnail{
+    width: 100%;
+    height: 100%;
+}
+.posts-side{
+    margin-bottom: 45px;
+}
+.contact-main{
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+.contact-container {
+    max-width: 600px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+p {
+    color: #666;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+input, textarea {
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+input:focus, textarea:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+button {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.contact-info, .social-media, .map {
+    margin-top: 20px;
+}
+
+.contact-info h2, .social-media h2, .map h2 {
+    color: #333;
+}
+
+.social-media a {
+    display: inline-block;
+    margin-right: 10px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.social-media a:hover {
+    text-decoration: underline;
+}
+
+.map iframe {
+    width: 100%;
+    height: 300px;
+    border: none;
+    border-radius: 4px;
+}
+.current_page_parent>a,.current-menu-item>a{
+    border-bottom: 1px solid red;
+    color: red;
+    padding: 10px;
+}
+.blog-posts-side{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    align-items: start;
+}
+.blog-post{
+    display: grid;
+    gap: 3px;
+    border: 2px solid black;
+}
+.post-heading{
+    background: #666;
+}
+.post-image{
+    border: 1px solid black;
+}
+.post-image{
+    height: 250px;
+    width: 100%;
+}
+.single-posts>h1{
+    display: flex;
+    align-items: start;
+}
+.single-post-image{
+    width: 613px;
+    height: 287px;
+}
+.nav .sub-menu {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+.nav li:hover .sub-menu {
+    width: 100px;
+    display: block;
+}
+.nav .sub-menu a {
+    color: #333;
+    text-decoration: none;
+    padding: 10px 15px;
+    display: block;
+}
+.sub-menu>li{
+    list-style: none;
+}
+.nav .sub-menu a:hover {
+    background-color: #f0f0f0;
+    color: #000;
+}
+.nav li {
+    position: relative;
+}
+.sidebar .widget {
+    background-color: #f9f9f9;  
+    border-radius: 5px; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+}
+
+.sidebar .widget a {
+    color: #0073aa;
+    text-decoration: none;
+    display: block; 
+    padding: 10px 15px;
+    border-radius: 3px;
+    transition: background-color 0.3s;
+}
+.sidebar .widget a:hover {
+    background-color: #e0e0e0;
+    color: #000;
+}
+.sidebar .widget a.active {
+    font-weight: bold; 
+    color: #fff;
+    background-color: #0073aa;
+}
+.sidebar .widget  {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+form {
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    margin: 20px;
+}
+input[type="text"] {
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+input[type="text"]:focus {
+    border-color: #4CAF50;
+}
+input[type="submit"] {
+    padding: 10px 20px;
+    margin-left: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+.news-form {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 30px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-title {
+    margin-bottom: 20px; /* Space below the title */
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+.form-input, .form-textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+/* .form-input:focus, .form-textarea:focus {
+    border-color: #4CAF50;
+} */
+.form-submit {
+   
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.form-submit:hover {
+    background-color: #45a049;
+}
+.main-inputs{
+    display: flex;
+    flex-direction: column;
+}
