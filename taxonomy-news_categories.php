@@ -1,5 +1,6 @@
 <?php
 get_header();
+wp_head();
 $catdata = get_queried_object();
 ?>
 <div class="main-container">

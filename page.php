@@ -1,5 +1,6 @@
 <?php
 get_header();
+wp_head();
 ?>
 <div class="main-container">
         <div class="left-side">

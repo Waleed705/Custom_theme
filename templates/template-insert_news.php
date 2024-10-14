@@ -3,6 +3,7 @@
  * Template Name: insert-news
  */
 get_header();
+wp_head();
 ?>
 <?php
     if(isset($_POST['savenews'])){

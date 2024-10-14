@@ -5,6 +5,7 @@
 ?>
 <?php
 get_header();
+wp_head();
 ?>
 <div class="contact-main">
 <div class="contact-container">

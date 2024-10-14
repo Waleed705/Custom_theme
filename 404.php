@@ -1,5 +1,6 @@
 <?php
 get_header();
+wp_head();
 ?>
 
 <!DOCTYPE html>
@@ -14,7 +15,6 @@ get_header();
             background-color: #f9f9f9;
             color: #333;
             text-align: center;
-            padding: 50px;
         }
         h1 {
             font-size: 50px;
