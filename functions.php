@@ -109,7 +109,7 @@ function load_tasks() {
         $results = $wpdb->get_results($wpdb->prepare("SELECT * FROM todos WHERE user_id = %d", $custom_user_id));
         foreach ($results as $todo) {
             $completedClass = $todo->completed ? 'completed' : '';
-            echo "<li class='$completedClass' data-id='{$todo->id}'>{$todo->task} <button class='delete-button' data-id='{$todo->id}'>Delete</button></li>";
+            echo "<li class='$completedClass' data-id='{$todo->id}'><p class='task-text' >{$todo->task}</p> <button class='delete-button' data-id='{$todo->id}'>Delete</button><button class='update-button' data-id='{$todo->id}'>Update</button></li>";
         }
     }
     else{
@@ -118,6 +118,39 @@ function load_tasks() {
     }
     wp_die();
 }
+
+add_action('wp_ajax_update_task', 'update_task');
+function update_task() {
+    global $wpdb;
+    $task_id = intval($_POST['task_id']);
+    $updated_task = sanitize_text_field($_POST['task']);
+    $custom_user = get_transient('current_user');
+    $custom_user_id = $custom_user->id;
+    $existing_task = $wpdb->get_var($wpdb->prepare(
+        "SELECT id FROM todos WHERE task = %s AND user_id = %d AND id != %d", 
+        $updated_task, 
+        $custom_user_id,
+        $task_id
+    ));
+
+    if ($existing_task) {
+        echo json_encode([ 'status' => 'error', 'message' => 'Task name already exists']);
+        wp_die();
+    } else {
+        // Update the task in the database
+        $wpdb->update(
+            'todos',
+            array('task' => $updated_task),
+            array('id' => $task_id, 'user_id' => $custom_user_id),
+            array('%s'),
+            array('%d', '%d')
+        );
+        echo json_encode([ 'status' => 'success', 'message' => 'Task updated']);
+        wp_die();
+    }
+}
+
+
 // Add a new task
 add_action('wp_ajax_add_task', 'add_task');
 function add_task() {
@@ -141,6 +174,9 @@ function add_task() {
         wp_die();
     }
 }
+
+
+
 // Delete a task
 add_action('wp_ajax_delete_task', 'delete_task');
 function delete_task() {

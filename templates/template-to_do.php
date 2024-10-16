@@ -12,8 +12,8 @@ wp_head();
         <input type="text" id="task-input" placeholder="Add a new task..." required>
         <button id="add-button" type="submit">Add</button>
         <ul id="task-list"></ul>
+        <button id="logout-button" type="button">Logout</button> <!-- Logout Button -->
     </div>
-    <button id="logout-button" type="button">Logout</button> <!-- Logout Button -->
 </form>
 
     <style>
@@ -59,12 +59,21 @@ wp_head();
             align-items: center;
         }
         .delete-button {
-            background: #d9534f;
+            background: red;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             padding: 5px 10px;
+        }
+        .update-button {
+            background: blue;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 5px 10px;
+            margin-left: 5px;
         }
         .completed {
             text-decoration: line-through;
@@ -87,6 +96,39 @@ $(document).ready(function() {
         });
     }
     loadTasks();
+
+// Update task
+$(document).on('click', '.update-button', function() {
+    const taskId = $(this).data('id');
+    const taskElement = $(this).siblings('p.task-text');
+    const currentTask = taskElement.text();
+    const newTask = prompt('Edit your task:', currentTask);
+
+    if (newTask) {
+        $.ajax({
+            url: "<?php echo admin_url('admin-ajax.php'); ?>",
+            method: "POST",
+            data: {
+                action: 'update_task',
+                task_id: taskId,
+                task: newTask
+            },
+            success: function(response) {
+                const res = JSON.parse(response);
+                if (res.status === 'success') {
+                    loadTasks();
+                } else {
+                    alert(res.message);
+                }
+            },
+            error: function() {
+                alert('Error updating task.');
+            }
+        });
+    }
+});
+
+
     // Add new task
     $('#add-button').click(function(e) {
         e.preventDefault();
@@ -101,7 +143,6 @@ $(document).ready(function() {
                 },
                 success: function(response) {
                     response = JSON.parse(response);
-                    debugger;
                     if ( response && response.status == 'success' ) {
                         loadTasks();
                         $('#task-input').val('');
@@ -128,6 +169,9 @@ $(document).ready(function() {
             }
         });
     });
+
+
+    
     // Mark task as completed
     $(document).on('click', 'li', function() {
         const taskId = $(this).data('id');
@@ -167,6 +211,7 @@ $(document).ready(function() {
             }
         });
     });
+    
 });
 </script>
 <?php
