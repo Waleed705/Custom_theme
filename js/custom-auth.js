@@ -16,7 +16,6 @@ jQuery(document).ready(function($) {
         emailerror.text('');
         passworderror.text('');
         checkerror.text('');
-    
         $("#name").on('input', function() {
             nameerror.text('');
         });
@@ -29,26 +28,41 @@ jQuery(document).ready(function($) {
         $("#checkbox").on('change', function() {
             checkerror.text('');
         });
-        
-        
         if (fname === '') {
             nameerror.text('Name is required').css('color', 'red');
         }
         if (email === '') {
             emailerror.text('Email is required').css('color', 'red');
+        } else {
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (!emailPattern.test(email)) {
+                emailerror.text('Please enter a valid email address').css('color', 'red');
+            } else {
+                emailerror.text('');
+            }
         }
         if (mpassword === '') {
             passworderror.text('Password is required').css('color', 'red');
-        } 
+        } else if (mpassword.length < 8) {
+            passworderror.text('Password must be at least 8 characters long').css('color', 'red');
+        } else if (!/[A-Z]/.test(mpassword)) {
+            passworderror.text('Password must contain at least one uppercase letter').css('color', 'red');
+        } else if (!/[a-z]/.test(mpassword)) {
+            passworderror.text('Password must contain at least one lowercase letter').css('color', 'red');
+        } else if (!/[0-9]/.test(mpassword)) {
+            passworderror.text('Password must contain at least one number').css('color', 'red');
+        } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(mpassword)) {
+            passworderror.text('Password must contain at least one special character (!@#$%^&* etc.)').css('color', 'red');
+        } else {
+            passworderror.text('');
+        }
         if (!checkbox.is(':checked')) { 
             checkerror.text('You must agree to the terms and conditions').css('color', 'red');
         }
-
         if (nameerror.text() !== '' || emailerror.text() !== '' || passworderror.text() !== '' || checkerror.text() !== '') {
             return false;
         }
-
-       
         let formData = {
             'action': 'register_user',
             'name': fname,
@@ -56,40 +70,27 @@ jQuery(document).ready(function($) {
             'password': mpassword,
             'form': 'signup',
         };
-
         $.ajax({
             url: ajax_object.ajaxurl, 
             type: 'POST',
             data: formData,
             success: function(response) {
-
-                if (response && typeof response === "object") {
-                    if (response.success) { 
+                if (response) {
+                    if (response.success) {
                         window.location.href = response.data.url;
-                    } else if (response.success === false) { 
-                        let errorMessage = typeof response.data.message === "string" ? response.data.message : JSON.stringify(response.data.message);
-                        $("#response").text(errorMessage);
                     } else {
-                        $("#response").text(response.message || 'Unexpected response from the server.');
+                        $("#response").text(response.data.messages);
                     }
                 } else {
                     $("#response").text('Invalid response from the server.');
                 }
             },
-            error: function(xhr, status, error) {
-                try {
-                    let response = JSON.parse(xhr.responseText);
-                    let errorMessage = typeof response.message === "string" ? response.message : JSON.stringify(response.message);
-                    $("#response").text(errorMessage || 'An error occurred. Please try again.');
-                } catch (e) {
-                    $("#response").text(xhr.responseText || 'An unknown error occurred.');
-                }
+            error: function(xhr) {
+                    $("#response").text(xhr.statusText || 'An error occurred. Please try again.').css('color', 'red');
+                   
             }
         });
-        
-        
     });
-
     jQuery(document).ready(function($) {
         $("#login").click(function(e) {
             e.preventDefault();
@@ -125,19 +126,18 @@ jQuery(document).ready(function($) {
                 data: formData,
                 success: function(response) {
                 
-                    if (response && typeof response === "object") {
+                    if (response) {
                         if (response.success) {
                             window.location.href = response.data.url;
                         } else {
-                            let errorMessage = response.data ? response.data : 'Unexpected response from the server.';
-                            responseMessage.text(errorMessage).css('color', 'red');
+                            $("#response").text(response.data);
                         }
                     } else {
                         responseMessage.text('Invalid response from the server.').css('color', 'red');
                     }
                 },
                 error: function(xhr) {
-                    responseMessage.text(xhr.responseText || 'An error occurred. Please try again.').css('color', 'red');
+                    responseMessage.text(xhr.statusText || 'An error occurred. Please try again.').css('color', 'red');
                 }
             });
         });

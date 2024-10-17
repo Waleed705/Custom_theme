@@ -30,7 +30,7 @@ wp_head();
                     <input type="submit" value="Sign Up" class="submit" id="signup">
                 </div>
                 <div class="login">
-                    <p>Already have an account? <a href="">Login here</a></p>
+                    <p>Already have an account? <a href="<?php echo( home_url( '/login-page' ) ); ?>">Login here</a></p>
                     <p id="response"></p>
                 </div>
             </div>

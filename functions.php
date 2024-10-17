@@ -38,7 +38,7 @@ function register_user_callback() {
     $email = sanitize_email($_POST['email']);
     $password = $_POST['password'];
     if (empty($name) || empty($email) || empty($password)) {
-        wp_send_json_error('All fields are required.');
+        wp_send_json_error(array('messages' =>'All fields are required.'));
         wp_die();
     }
 
@@ -46,7 +46,7 @@ function register_user_callback() {
 $existing_user = $wpdb->get_row($wpdb->prepare("SELECT * FROM wp_custom_users WHERE email = %s", $email));
 if ($existing_user) {
     wp_send_json_error(array('messages' => 'Email already exists. Please use a different email.'));
-    wp_die();
+    // wp_die();
 }
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
     $table_name = $wpdb->prefix . 'custom_users';
@@ -84,7 +84,6 @@ function handle_login_user() {
 
     wp_die();
 }
-
 add_action('wp_ajax_login_user', 'handle_login_user');
 add_action('wp_ajax_nopriv_login_user', 'handle_login_user'); 
 
@@ -94,11 +93,6 @@ function handle_logout_user() {
     delete_transient('current_user');
     wp_send_json_success(array('redirect' => home_url('/login-page'))); 
 }
-
-
-
-
-
 // Load tasks
 add_action('wp_ajax_load_tasks', 'load_tasks');
 function load_tasks() {
@@ -118,7 +112,6 @@ function load_tasks() {
     }
     wp_die();
 }
-
 add_action('wp_ajax_update_task', 'update_task');
 function update_task() {
     global $wpdb;
@@ -132,7 +125,6 @@ function update_task() {
         $custom_user_id,
         $task_id
     ));
-
     if ($existing_task) {
         echo json_encode([ 'status' => 'error', 'message' => 'Task name already exists']);
         wp_die();
@@ -149,8 +141,6 @@ function update_task() {
         wp_die();
     }
 }
-
-
 // Add a new task
 add_action('wp_ajax_add_task', 'add_task');
 function add_task() {
@@ -162,7 +152,6 @@ function add_task() {
         "SELECT id FROM todos WHERE task = %s AND user_id = %d", 
         $task, 
         $custom_user_id
-
     ));
     if ($existing_task) {
         echo json_encode([ 'status' => 'error', 'message' => 'Task already taken']);
@@ -174,9 +163,6 @@ function add_task() {
         wp_die();
     }
 }
-
-
-
 // Delete a task
 add_action('wp_ajax_delete_task', 'delete_task');
 function delete_task() {
