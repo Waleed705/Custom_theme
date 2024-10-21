@@ -12,83 +12,64 @@
     );
     add_theme_support('custom-background');
 
-    function my_custom_styles() {
-        wp_enqueue_style('theme-css', get_template_directory_uri() . '/style.css', [], false, 'all');
-        wp_enqueue_style('custom-css', get_template_directory_uri() . '/asstets/css/custom-style.css', ['theme-css'], false, 'all');
-
-    }
     add_action('wp_enqueue_scripts', 'my_custom_styles');
+    function my_custom_styles() {
+            wp_enqueue_style('theme-css', get_template_directory_uri() . '/style.css', [], false, 'all');
+            wp_enqueue_style('custom-css', get_template_directory_uri() . '/asstets/css/custom-style.css', ['theme-css'], false, 'all');
+        }
+    add_action('wp_enqueue_scripts', 'enqueue_custom_scripts');
+    function enqueue_custom_scripts() {
+        wp_enqueue_script('jquery');
+        wp_enqueue_script('custom-auth', get_template_directory_uri() . '/js/custom-auth.js', array('jquery'), null, true);
+        wp_localize_script('custom-auth', 'ajax_object', array(
+            'ajaxurl' => admin_url('admin-ajax.php'),
+        ));
+    }
+    add_action('wp_ajax_register_user', 'register_user_callback');
+    function register_user_callback() {
+        global $wpdb; 
+        $username = ($_POST['name']);
+        $email = ($_POST['email']);
+        $password = $_POST['password'];
+        if (empty($username) || empty($email) || empty($password)) {
+            wp_send_json_error(array('messages' =>'All fields are required.'));
+            wp_die();
+        }
     
-function enqueue_custom_scripts() {
-    wp_enqueue_script('jquery');
-    wp_enqueue_script('custom-auth', get_template_directory_uri() . '/js/custom-auth.js', array('jquery'), null, true);
-    wp_localize_script('custom-auth', 'ajax_object', array(
-        'ajaxurl' => admin_url('admin-ajax.php'),
-    ));
-}
-add_action('wp_enqueue_scripts', 'enqueue_custom_scripts');
+        $user_id = wp_create_user( $username, $password, $email);
+        
 
-
-add_action('wp_ajax_register_user', 'register_user_callback');
-add_action('wp_ajax_nopriv_register_user', 'register_user_callback');
-
-function register_user_callback() {
-    global $wpdb; 
-    $name = sanitize_text_field($_POST['name']);
-    $email = sanitize_email($_POST['email']);
-    $password = $_POST['password'];
-    if (empty($name) || empty($email) || empty($password)) {
-        wp_send_json_error(array('messages' =>'All fields are required.'));
+        if ($user_id) {
+            wp_send_json_success(array('status' => 'success', 'url' => home_url('/login-page')));
+        } else {
+            wp_send_json_error('An error occurred. Please try again.');
+        }
         wp_die();
     }
-
-
-$existing_user = $wpdb->get_row($wpdb->prepare("SELECT * FROM wp_custom_users WHERE email = %s", $email));
-if ($existing_user) {
-    wp_send_json_error(array('messages' => 'Email already exists. Please use a different email.'));
-    // wp_die();
-}
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-    $table_name = $wpdb->prefix . 'custom_users';
-    $result = $wpdb->insert($table_name, array(
-        'name' => $name,
-        'email' => $email,
-        'password' => $hashed_password,
-    ));
-
-    if ($result) {
-        wp_send_json_success(array('status' => 'success', 'url' => home_url('/login-page')));
-    } else {
-        wp_send_json_error('An error occurred. Please try again.');
-    }
-
-    wp_die();
-}
-
+    add_action('wp_ajax_login_user', 'handle_login_user');
 function handle_login_user() {
     global $wpdb;
-    if (!isset($_POST['email']) || !isset($_POST['password'])) {
-        wp_send_json_error('Email and Password are required.');
-        wp_die();
-    }
-    $email = sanitize_email($_POST['email']);
-    $password = $_POST['password'];
-    $user = $wpdb->get_row($wpdb->prepare("SELECT * FROM wp_custom_users WHERE email = %s", $email));
+    
+    
+    $creds = array();
+    $creds['user_login'] = $_POST["user-login"];
+    $creds['password'] = $_POST["user-password"];
+    $creds['remember'] = true;
+    
+    $user = wp_signon( $creds, false );
 
-    if ($user && password_verify($password, $user->password)) {
-        set_transient('current_user',$user, 3600000000);
-        wp_send_json_success(array('url' => home_url('/to_do-list'))); 
-    } else {
+    if (is_wp_error($user)) {
         wp_send_json_error('Email or Password is incorrect.');
+    } else {
+       
+        set_transient('current_user', $user, 3600000000);
+        wp_send_json_success(array('url' => home_url('/to_do-list')));
     }
 
     wp_die();
 }
-add_action('wp_ajax_login_user', 'handle_login_user');
-add_action('wp_ajax_nopriv_login_user', 'handle_login_user'); 
 
 add_action('wp_ajax_logout_user', 'handle_logout_user');
-
 function handle_logout_user() {
     delete_transient('current_user');
     wp_send_json_success(array('redirect' => home_url('/login-page'))); 
@@ -116,7 +97,7 @@ add_action('wp_ajax_update_task', 'update_task');
 function update_task() {
     global $wpdb;
     $task_id = intval($_POST['task_id']);
-    $updated_task = sanitize_text_field($_POST['task']);
+    $updated_task =$_POST['task'];
     $custom_user = get_transient('current_user');
     $custom_user_id = $custom_user->id;
     $existing_task = $wpdb->get_var($wpdb->prepare(
@@ -145,7 +126,7 @@ function update_task() {
 add_action('wp_ajax_add_task', 'add_task');
 function add_task() {
     global $wpdb;
-    $task = sanitize_text_field($_POST['task']);
+    $task = $_POST['task'];
     $custom_user = get_transient('current_user');
     $custom_user_id = $custom_user->id;
     $existing_task = $wpdb->get_var($wpdb->prepare(

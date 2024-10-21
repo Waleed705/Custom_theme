@@ -11,17 +11,15 @@ jQuery(document).ready(function($) {
         let passworderror = $("#password-error");
         let checkerror = $("#check-error");
         
-
-        nameerror.text('');
-        emailerror.text('');
-        passworderror.text('');
-        checkerror.text('');
         $("#name").on('input', function() {
             nameerror.text('');
         });
+    
+    
         $("#email").on('input', function() {
             emailerror.text('');
         });
+    
         $("#current-password").on('input', function() {
             passworderror.text('');
         });
@@ -70,12 +68,13 @@ jQuery(document).ready(function($) {
             'password': mpassword,
             'form': 'signup',
         };
+        
         $.ajax({
             url: ajax_object.ajaxurl, 
             type: 'POST',
             data: formData,
             success: function(response) {
-                if (response) {
+                if (response){
                     if (response.success) {
                         window.location.href = response.data.url;
                     } else {
@@ -86,29 +85,38 @@ jQuery(document).ready(function($) {
                 }
             },
             error: function(xhr) {
-                    $("#response").text(xhr.statusText || 'An error occurred. Please try again.').css('color', 'red');
-                   
+                    $("#response").text(xhr.statusText || 'An error occurred. Please try again.').css('color', 'red');      
             }
         });
     });
     jQuery(document).ready(function($) {
         $("#login").click(function(e) {
             e.preventDefault();
-            let email = $("#email").val();
+            let fname = $("#name").val();
             let password = $("#current-password").val();
-            let emailError = $("#email-error");
+            let nameError = $("#name-error");
             let passwordError = $("#password-error");
             let responseMessage = $("#response");
 
-            emailError.text('');
+            nameError.text('');
             passwordError.text('');
             responseMessage.text('');
     
             
-            if (email === '') {
-                emailError.text('Email is required').css('color', 'red');
-                return;
+            if (fname === '') {
+                nameError.text('Email is required').css('color', 'red');
+                
             }
+            $("#name").on('input', function() {
+                $("#name-error").text('');
+                $("#response").text('');
+            });
+        
+            $("#current-password").on('input', function() {
+                $("#password-error").text(''); 
+                $("#response").text('');
+            });
+        
             if (password === '') {
                 passwordError.text('Password is required').css('color', 'red');
                 return;
@@ -116,16 +124,15 @@ jQuery(document).ready(function($) {
 
             let formData = {
                 action: 'login_user',
-                email: email,
+                fname: fname,
                 password: password,
             };
-
             $.ajax({
                 url: ajax_object.ajaxurl,
                 type: 'POST',
                 data: formData,
                 success: function(response) {
-                
+
                     if (response) {
                         if (response.success) {
                             window.location.href = response.data.url;
@@ -141,18 +148,6 @@ jQuery(document).ready(function($) {
                 }
             });
         });
-    
-
-        $("#email").on('input', function() {
-            $("#email-error").text('');
-            $("#response").text('');
-        });
-    
-        $("#current-password").on('input', function() {
-            $("#password-error").text(''); 
-            $("#response").text('');
-        });
-    
         $("#signup2").click(function(e) {
             e.preventDefault();
             window.location.href = "/registration"; 

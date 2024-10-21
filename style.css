@@ -448,3 +448,11 @@ label {
 .registration-main{
     display: flex;
 }
+.error{
+    display: flex;
+    flex-direction: column;
+}
+.add-input{
+    display: flex;
+    gap: 10px;
+}

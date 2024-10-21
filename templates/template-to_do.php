@@ -9,8 +9,13 @@ wp_head();
     <h2>To-Do List</h2>
     <form action="" id="todo-form">
     <div class="todo-main">
+        <div class="add-input">
+        <div class="error">
         <input type="text" id="task-input" placeholder="Add a new task..." required>
-        <button id="add-button" type="submit">Add</button>
+        <span id="add-error" class="error-message"></span>
+        </div>
+        <button id="add-button" type="submit" width="100px">Add</button>
+        </div>
         <ul id="task-list"></ul>
         <button id="logout-button" type="button">Logout</button> <!-- Logout Button -->
     </div>
@@ -133,6 +138,13 @@ $(document).on('click', '.update-button', function() {
     $('#add-button').click(function(e) {
         e.preventDefault();
         const taskValue = $('#task-input').val().trim();
+        let adderror = $("#add-error");
+        if (taskValue === '') {
+            adderror.text('Please fill this.').css('color', 'red');
+        }
+        $("#task-input").on('input', function() {
+            adderror.text('');
+        });
         if (taskValue) {
             $.ajax({
                 url: "<?php echo admin_url('admin-ajax.php'); ?>",

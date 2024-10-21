@@ -10,8 +10,8 @@ wp_head();
         <form action="" method="POST" class="login-form">
             <h1>Login Form</h1>
         <div class="input">
-                <input type="email" placeholder="Enter email" name="email" id="email">
-                <span id="email-error" class="error-message"></span>
+        <input type="text" placeholder="Your name" name="name" id="name">
+        <span id="name-error" class="error-message"></span>
 
                 <input type="Password" placeholder="Enter Password" name="password" id="current-password">
                 <span id="password-error" class="error-message"></span>

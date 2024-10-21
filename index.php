@@ -31,9 +31,7 @@
         <div class="blog-posts-side">
             <?php
                 while(have_posts()){
-
                     the_post();
-
             ?>
             <div class="blog-post">
                 <div class="post-image">
@@ -60,7 +58,6 @@
                     foreach($newscat as $newscatdata){
                 ?>
                <li> <a href="<?php echo get_category_link($newscatdata); ?>"><h3><?php echo $newscatdata->name ?></h3></a></li>
-
                 <?php } ?>
             </ul>
         </div>
