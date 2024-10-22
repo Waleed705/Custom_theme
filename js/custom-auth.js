@@ -42,17 +42,10 @@ jQuery(document).ready(function($) {
         }
         if (mpassword === '') {
             passworderror.text('Password is required').css('color', 'red');
-        } else if (mpassword.length < 8) {
-            passworderror.text('Password must be at least 8 characters long').css('color', 'red');
-        } else if (!/[A-Z]/.test(mpassword)) {
-            passworderror.text('Password must contain at least one uppercase letter').css('color', 'red');
-        } else if (!/[a-z]/.test(mpassword)) {
-            passworderror.text('Password must contain at least one lowercase letter').css('color', 'red');
-        } else if (!/[0-9]/.test(mpassword)) {
-            passworderror.text('Password must contain at least one number').css('color', 'red');
-        } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(mpassword)) {
-            passworderror.text('Password must contain at least one special character (!@#$%^&* etc.)').css('color', 'red');
-        } else {
+        } else if (!/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}:;<>,.?~\\/-])[A-Za-z\d!@#$%^&*()_+{}:;<>,.?~\\/-]{8,}$/.test(mpassword)) {
+            passworderror.text('Password must be at least 8 characters long, contain at least one uppercase letter, one number, and one special character').css('color', 'red');
+        }
+        else {
             passworderror.text('');
         }
         if (!checkbox.is(':checked')) { 
@@ -92,23 +85,23 @@ jQuery(document).ready(function($) {
     jQuery(document).ready(function($) {
         $("#login").click(function(e) {
             e.preventDefault();
-            let fname = $("#name").val();
+            let email = $("#email").val();
             let password = $("#current-password").val();
-            let nameError = $("#name-error");
+            let emailError = $("#email-error");
             let passwordError = $("#password-error");
             let responseMessage = $("#response");
 
-            nameError.text('');
+            emailError.text('');
             passwordError.text('');
             responseMessage.text('');
     
             
-            if (fname === '') {
-                nameError.text('Email is required').css('color', 'red');
+            if (email === '') {
+                emailError.text('Email is required').css('color', 'red');
                 
             }
-            $("#name").on('input', function() {
-                $("#name-error").text('');
+            $("#email").on('input', function() {
+                $("#email-error").text('');
                 $("#response").text('');
             });
         
@@ -124,7 +117,7 @@ jQuery(document).ready(function($) {
 
             let formData = {
                 action: 'login_user',
-                fname: fname,
+                email: email,
                 password: password,
             };
             $.ajax({

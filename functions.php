@@ -47,39 +47,36 @@
         wp_die();
     }
     add_action('wp_ajax_login_user', 'handle_login_user');
-function handle_login_user() {
-    global $wpdb;
-    
-    
-    $creds = array();
-    $creds['user_login'] = $_POST["user-login"];
-    $creds['password'] = $_POST["user-password"];
-    $creds['remember'] = true;
-    
-    $user = wp_signon( $creds, false );
+        function handle_login_user() {
+            global $wpdb;
+            $email = sanitize_email($_POST['email']);
+            $password = $_POST['password'];
+           $user= wp_authenticate($email,$password);
+            if ( $user) {
+                if ( is_wp_error( $user ) ){
+                    $error_string = $user->get_error_message();
+                    wp_send_json_error( $error_string );
+                } else {
+                    set_transient('current_user',$user->ID, 3600000000);
+                    wp_send_json_success(array('url' => home_url('/to_do-list'))); 
+                }
+            } else {
+                wp_send_json_error('Email or Password is incorrect.');
+            }
 
-    if (is_wp_error($user)) {
-        wp_send_json_error('Email or Password is incorrect.');
-    } else {
-       
-        set_transient('current_user', $user, 3600000000);
-        wp_send_json_success(array('url' => home_url('/to_do-list')));
-    }
-
-    wp_die();
-}
-
+            wp_die();
+        }
 add_action('wp_ajax_logout_user', 'handle_logout_user');
 function handle_logout_user() {
     delete_transient('current_user');
     wp_send_json_success(array('redirect' => home_url('/login-page'))); 
 }
-// Load tasks
+//load task
 add_action('wp_ajax_load_tasks', 'load_tasks');
 function load_tasks() {
     global $wpdb;
     $custom_user = get_transient('current_user');
-    $custom_user_id = $custom_user->id;
+    $custom_user_id = $custom_user;
     if(!empty($custom_user_id)){
         $results = $wpdb->get_results($wpdb->prepare("SELECT * FROM todos WHERE user_id = %d", $custom_user_id));
         foreach ($results as $todo) {
@@ -128,7 +125,7 @@ function add_task() {
     global $wpdb;
     $task = $_POST['task'];
     $custom_user = get_transient('current_user');
-    $custom_user_id = $custom_user->id;
+    $custom_user_id = $custom_user;
     $existing_task = $wpdb->get_var($wpdb->prepare(
         "SELECT id FROM todos WHERE task = %s AND user_id = %d", 
         $task, 
@@ -149,7 +146,7 @@ add_action('wp_ajax_delete_task', 'delete_task');
 function delete_task() {
     global $wpdb;
     $custom_user = get_transient('current_user');
-    $custom_user_id = $custom_user->id;
+    $custom_user_id = $custom_user;
     $id = intval($_POST['id']);
     $wpdb->delete('todos', array('id' => $id, 'user_id' => $custom_user_id));
     wp_die();
@@ -159,7 +156,7 @@ add_action('wp_ajax_toggle_task', 'toggle_task');
 function toggle_task() {
     global $wpdb;
     $custom_user = get_transient('current_user');
-    $custom_user_id = $custom_user->id;
+    $custom_user_id = $custom_user;
     $id = intval($_POST['id']);
     $completed = intval($_POST['completed']);
     $wpdb->update('todos', array('completed' => $completed), array('id' => $id, 'user_id' => $custom_user_id ));
@@ -193,7 +190,7 @@ function get_user_tasks($request) {
     $user_id = $request->get_param('user_id');
     global $wpdb;
     $custom_user = get_transient('current_user');
-    $custom_user_id = $custom_user->id;
+    $custom_user_id = $custom_user;
 
     $user_exists = $wpdb->get_var($wpdb->prepare("SELECT id FROM wp_custom_users WHERE  id = %d", $custom_user_id));
     if (!$user_exists) {
@@ -209,7 +206,7 @@ function get_user_tasks($request) {
 // Add a new task for a user
 function add_user_task($request) {
     $custom_user = get_transient('current_user');
-    $custom_user_id = $custom_user->id;
+    $custom_user_id = $custom_user;
     $task = sanitize_text_field($request['task']);
     $status = sanitize_text_field($request['completed']);
     $custom_user_id = sanitize_text_field($request['user_id']);
